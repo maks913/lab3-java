@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="jakarta.faces.core"
+      xmlns:h="jakarta.faces.html">
+<f:view>
+    <h:head>
+        <title>Index Page</title>
+        <h:outputStylesheet library="css" name="styles.css"/>
+    </h:head>
+    <h:body>
+        <div class="actions-container">
+            <h:form>
+                <h1>Create Booking</h1>
+                <h:outputLabel value="Client Name:" for="clientName"/>
+                <h:inputText id="clientName" value="#{bookingService.booking.clientName}" required="true"/>
+
+                <h:outputLabel value="Check In:" for="checkIn"/>
+                <h:inputText id="checkIn" value="#{bookingService.booking.checkIn}" required="true">
+                    <f:convertDateTime type="localDate" pattern="yyyy-MM-dd"/>
+                </h:inputText>
+
+                <h:outputLabel value="Check Out:" for="checkOut"/>
+                <h:inputText id="checkOut" value="#{bookingService.booking.checkOut}">
+                    <f:convertDateTime type="localDate" pattern="yyyy-MM-dd"/>
+                </h:inputText>
+
+                <h:outputLabel value="Price Per Day:" for="pricePerDay"/>
+                <h:inputText id="pricePerDay" value="#{bookingService.booking.pricePerDay}"/>
+
+                <h:outputLabel value="Room Number:" for="roomNumber"/>
+                <h:inputText id="roomNumber" value="#{bookingService.booking.roomNumber}" required="true"/>
+
+                <h:commandButton action="#{bookingService.createBooking}" value="Create Booking"/>
+            </h:form>
+
+            <h:form>
+                <h1>Edit booking</h1>
+                <h:outputLabel value="Client Name: "/>
+                <h:inputText value="#{bookingService.editingBooking.clientName}"/>
+
+                <h:outputLabel value="Room Number: "/>
+                <h:inputText value="#{bookingService.editingBooking.roomNumber}"/>
+
+                <h:outputLabel value="Price Per Day: "/>
+                <h:inputText value="#{bookingService.editingBooking.pricePerDay}"/>
+
+                <h:outputLabel value="Check In: "/>
+                <h:inputText value="#{bookingService.editingBooking.checkIn}">
+                    <f:convertDateTime type="localDate" pattern="yyyy-MM-dd"/>
+                </h:inputText>
+
+                <h:outputLabel value="Check Out: "/>
+                <h:inputText value="#{bookingService.editingBooking.checkOut}">
+                    <f:convertDateTime type="localDate" pattern="yyyy-MM-dd"/>
+                </h:inputText>
+
+                <h:commandButton value="Update" action="#{bookingService.updateBooking}"/>
+            </h:form>
+        </div>
+        <div class="table-container">
+            <h:form>
+                <h1>Booking Table</h1>
+                <h:dataTable value="#{bookingService.allBookings}" var="b">
+                    <h:column>
+                        <f:facet name="header">№</f:facet>
+                        <h:outputText value="#{b.id}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Check In</f:facet>
+                        <h:outputText value="#{b.checkIn}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Check Out</f:facet>
+                        <h:outputText value="#{b.checkOut}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Client Name</f:facet>
+                        <h:outputText value="#{b.clientName}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Price per day</f:facet>
+                        <h:outputText value="#{b.pricePerDay}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Room Number</f:facet>
+                        <h:outputText value="#{b.roomNumber}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">X</f:facet>
+                        <h:commandButton value="Delete" action="#{bookingService.deleteBooking(b.id)}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Edit</f:facet>
+                        <h:commandButton value="Edit" action="#{bookingService.edit(b.id)}"/>
+                    </h:column>
+                </h:dataTable>
+            </h:form>
+        </div>
+    </h:body>
+</f:view>
+</html>

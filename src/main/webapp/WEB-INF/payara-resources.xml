@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE resources PUBLIC "-//GlassFish.org//DTD GlassFish Application Server 6.2023 Resource Definitions//EN" " ">
+<!--
+    fill the data according to comments
+-->
+<resources>
+    <!-- pool name (change nuospool), for example java:app/db_pool-->
+    <jdbc-connection-pool name="nuospool"
+                          datasource-classname="com.mysql.cj.jdbc.MysqlDataSource"
+                          res-type="javax.sql.DataSource">
+
+        <!-- user name - login in Database -->
+        <property name="User" value="root"/>
+        <!-- password in Database -->
+        <property name="Password" value="Bomaik21#"/>
+        <!-- URL of database - with parameter -->
+        <property name="URL" value="jdbc:mysql://localhost:3306/lab4java?useSSL=false" />
+        <property name="driverClass" value="com.mysql.cj.jdbc.Driver"/>
+
+    </jdbc-connection-pool>
+    <!-- JNDI name of resource and name of the pool (change values for jndi-name and pool-name)-->
+    <jdbc-resource enabled="true" jndi-name="java:app/jdbc/nuos" object-type="user" pool-name="nuospool"/>
+</resources>
