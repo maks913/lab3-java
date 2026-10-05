@@ -27,8 +27,12 @@ public class BookingService {
 
     @Transactional
     public void createBooking() {
-        entityManager.persist(booking);
-        booking = new Booking();
+        if (booking.getCheckIn().isBefore(booking.getCheckOut())) {
+            entityManager.persist(booking);
+            booking = new Booking();
+        } else {
+            throw new IllegalStateException();
+        }
     }
 
     public Booking getBooking(int bookingId) {
@@ -47,8 +51,10 @@ public class BookingService {
 
     @Transactional
     public void updateBooking() {
-        if (editingBooking != null) {
+        if (editingBooking != null && editingBooking.getCheckIn().isBefore(editingBooking.getCheckOut())) {
             entityManager.merge(editingBooking);
+        } else {
+            throw new IllegalStateException();
         }
     }
 
