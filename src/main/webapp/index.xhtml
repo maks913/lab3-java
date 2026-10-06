@@ -2,101 +2,114 @@
 <html lang="en"
       xmlns="http://www.w3.org/1999/xhtml"
       xmlns:f="jakarta.faces.core"
-      xmlns:h="jakarta.faces.html">
+      xmlns:h="jakarta.faces.html"
+      xmlns:p="primefaces">
 <f:view>
     <h:head>
         <title>Index Page</title>
         <h:outputStylesheet library="css" name="styles.css"/>
     </h:head>
     <h:body>
-        <div class="actions-container">
-            <h:form>
-                <h1>Create Booking</h1>
-                <h:outputLabel value="Client Name:" for="clientName"/>
-                <h:inputText id="clientName" value="#{bookingService.booking.clientName}" required="true"/>
+        <div class="create-container">
+            <div class="bookings-section">
+                <h:form id="bookings-form">
+                    <h1>Booking Table</h1>
+                    <p:dataTable value="#{bookingService.allBookings}" var="b">
+                        <p:column>
+                            <f:facet name="header">№</f:facet>
+                            <h:outputText value="#{b.id}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">Check In</f:facet>
+                            <h:outputText value="#{b.checkIn}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">Check Out</f:facet>
+                            <h:outputText value="#{b.checkOut}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">Client Name</f:facet>
+                            <h:outputText value="#{b.clientName}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">Price per day</f:facet>
+                            <h:outputText value="#{b.pricePerDay}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">Room Number</f:facet>
+                            <h:outputText value="#{b.roomNumber}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">X</f:facet>
+                            <p:commandButton icon="pi pi-trash" styleClass="ui-button-danger"
+                                             action="#{bookingService.deleteBooking(b.id)}" update="@form"/>
 
-                <h:outputLabel value="Check In:" for="checkIn"/>
-                <h:inputText id="checkIn" value="#{bookingService.booking.checkIn}" required="true">
-                    <f:convertDateTime type="localDate" pattern="yyyy-MM-dd"/>
-                </h:inputText>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">Edit</f:facet>
+                            <p:commandButton value="Edit" action="#{bookingService.edit(b.id)}"
+                                             onclick="PF('edit-booking').show()" update="edit-form"/>
+                        </p:column>
+                    </p:dataTable>
+                </h:form>
+            </div>
+            <div class="create-section">
+                <h:form id="create-form">
+                    <h1>Create Booking</h1>
+                    <h:panelGrid columns="1" cellpadding="3">
 
-                <h:outputLabel value="Check Out:" for="checkOut"/>
-                <h:inputText id="checkOut" value="#{bookingService.booking.checkOut}">
-                    <f:convertDateTime type="localDate" pattern="yyyy-MM-dd"/>
-                </h:inputText>
+                        <h:outputLabel value="Client Name:" for="clientName"/>
+                        <h:inputText id="clientName" value="#{bookingService.booking.clientName}" required="true"/>
 
-                <h:outputLabel value="Price Per Day:" for="pricePerDay"/>
-                <h:inputText id="pricePerDay" value="#{bookingService.booking.pricePerDay}"/>
+                        <h:outputLabel value="Check In:" for="checkIn"/>
+                        <h:inputText id="checkIn" value="#{bookingService.booking.checkIn}" required="true">
+                            <f:convertDateTime type="localDate" pattern="yyyy-MM-dd"/>
+                        </h:inputText>
 
-                <h:outputLabel value="Room Number:" for="roomNumber"/>
-                <h:inputText id="roomNumber" value="#{bookingService.booking.roomNumber}" required="true"/>
+                        <h:outputLabel value="Check Out:" for="checkOut"/>
+                        <h:inputText id="checkOut" value="#{bookingService.booking.checkOut}">
+                            <f:convertDateTime type="localDate" pattern="yyyy-MM-dd"/>
+                        </h:inputText>
 
-                <h:commandButton action="#{bookingService.createBooking}" value="Create Booking"/>
-            </h:form>
+                        <h:outputLabel value="Price Per Day:" for="pricePerDay"/>
+                        <h:inputText id="pricePerDay" value="#{bookingService.booking.pricePerDay}"/>
 
-            <h:form>
-                <h1>Edit booking</h1>
-                <h:outputLabel value="Client Name: "/>
-                <h:inputText value="#{bookingService.editingBooking.clientName}"/>
+                        <h:outputLabel value="Room Number:" for="roomNumber"/>
+                        <h:inputText id="roomNumber" value="#{bookingService.booking.roomNumber}" required="true"/>
 
-                <h:outputLabel value="Room Number: "/>
-                <h:inputText value="#{bookingService.editingBooking.roomNumber}"/>
-
-                <h:outputLabel value="Price Per Day: "/>
-                <h:inputText value="#{bookingService.editingBooking.pricePerDay}"/>
-
-                <h:outputLabel value="Check In: "/>
-                <h:inputText value="#{bookingService.editingBooking.checkIn}">
-                    <f:convertDateTime type="localDate" pattern="yyyy-MM-dd"/>
-                </h:inputText>
-
-                <h:outputLabel value="Check Out: "/>
-                <h:inputText value="#{bookingService.editingBooking.checkOut}">
-                    <f:convertDateTime type="localDate" pattern="yyyy-MM-dd"/>
-                </h:inputText>
-
-                <h:commandButton value="Update" action="#{bookingService.updateBooking}"/>
-            </h:form>
+                        <p:commandButton action="#{bookingService.createBooking}" value="Create Booking"
+                                         styleClass="ui-button-primary" update="@form, bookings-form"/>
+                    </h:panelGrid>
+                </h:form>
+            </div>
         </div>
-        <div class="table-container">
-            <h:form>
-                <h1>Booking Table</h1>
-                <h:dataTable value="#{bookingService.allBookings}" var="b">
-                    <h:column>
-                        <f:facet name="header">№</f:facet>
-                        <h:outputText value="#{b.id}"/>
-                    </h:column>
-                    <h:column>
-                        <f:facet name="header">Check In</f:facet>
-                        <h:outputText value="#{b.checkIn}"/>
-                    </h:column>
-                    <h:column>
-                        <f:facet name="header">Check Out</f:facet>
-                        <h:outputText value="#{b.checkOut}"/>
-                    </h:column>
-                    <h:column>
-                        <f:facet name="header">Client Name</f:facet>
-                        <h:outputText value="#{b.clientName}"/>
-                    </h:column>
-                    <h:column>
-                        <f:facet name="header">Price per day</f:facet>
-                        <h:outputText value="#{b.pricePerDay}"/>
-                    </h:column>
-                    <h:column>
-                        <f:facet name="header">Room Number</f:facet>
-                        <h:outputText value="#{b.roomNumber}"/>
-                    </h:column>
-                    <h:column>
-                        <f:facet name="header">X</f:facet>
-                        <h:commandButton value="Delete" action="#{bookingService.deleteBooking(b.id)}"/>
-                    </h:column>
-                    <h:column>
-                        <f:facet name="header">Edit</f:facet>
-                        <h:commandButton value="Edit" action="#{bookingService.edit(b.id)}"/>
-                    </h:column>
-                </h:dataTable>
+
+        <p:dialog id="edit-dialog" header="Edit booking" widgetVar="edit-booking" showEffect="fade" closeOnEscape="true" closable="true"
+                  modal="true" width="400">
+            <h:form id="edit-form">
+                <h:outputLabel value="Client Name: " for="edit-clientName"/>
+                <h:inputText id="edit-clientName" value="#{bookingService.editingBooking.clientName}"/>
+
+                <h:outputLabel value="Room Number: " for="edit-roomNumber"/>
+                <h:inputText id="edit-roomNumber" value="#{bookingService.editingBooking.roomNumber}"/>
+
+                <h:outputLabel value="Price Per Day: " for="edit-pricePerDay"/>
+                <h:inputText id="edit-pricePerDay" value="#{bookingService.editingBooking.pricePerDay}"/>
+
+                <h:outputLabel value="Check In: " for="edit-checkIn"/>
+                <h:inputText id="edit-checkIn" value="#{bookingService.editingBooking.checkIn}">
+                    <f:convertDateTime type="localDate" pattern="yyyy-MM-dd"/>
+                </h:inputText>
+
+                <h:outputLabel value="Check Out: " for="edit-checkOut"/>
+                <h:inputText id="edit-checkOut" value="#{bookingService.editingBooking.checkOut}">
+                    <f:convertDateTime type="localDate" pattern="yyyy-MM-dd"/>
+                </h:inputText>
+
+                <p:commandButton value="Update" action="#{bookingService.updateBooking}"
+                                 styleClass="ui-button-primary" update="edit-dialog, bookings-form"/>
             </h:form>
-        </div>
+        </p:dialog>
     </h:body>
 </f:view>
 </html>

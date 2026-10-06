@@ -15,7 +15,7 @@ import java.util.List;
 public class BookingService {
 
     @PersistenceContext
-    private EntityManager entityManager;
+    private EntityManager em;
 
     @Getter
     @Setter
@@ -25,34 +25,34 @@ public class BookingService {
     @Setter
     private Booking editingBooking;
 
+    public Booking getBookingById(int bookingId) {
+        return em.find(Booking.class, bookingId);
+    }
+
+    public void edit(int bookingId) {
+        editingBooking = getBookingById(bookingId);
+    }
+
+    public List<Booking> getAllBookings() {
+        return em
+                .createQuery("SELECT b FROM Booking b", Booking.class)
+                .getResultList();
+    }
+
     @Transactional
     public void createBooking() {
         if (booking.getCheckIn().isBefore(booking.getCheckOut())) {
-            entityManager.persist(booking);
+            em.persist(booking);
             booking = new Booking();
         } else {
             throw new IllegalStateException();
         }
     }
 
-    public Booking getBooking(int bookingId) {
-        return entityManager.find(Booking.class, bookingId);
-    }
-
-    public void edit(int bookingId) {
-        editingBooking = getBooking(bookingId);
-    }
-
-    public List<Booking> getAllBookings() {
-        return entityManager
-                .createQuery("SELECT b FROM Booking b", Booking.class)
-                .getResultList();
-    }
-
     @Transactional
     public void updateBooking() {
         if (editingBooking != null && editingBooking.getCheckIn().isBefore(editingBooking.getCheckOut())) {
-            entityManager.merge(editingBooking);
+            em.merge(editingBooking);
         } else {
             throw new IllegalStateException();
         }
@@ -60,10 +60,10 @@ public class BookingService {
 
     @Transactional
     public void deleteBooking(int bookingId) {
-        Booking bookingToDelete = getBooking(bookingId);
+        Booking bookingToDelete = getBookingById(bookingId);
 
         if (bookingToDelete != null) {
-            entityManager.remove(bookingToDelete);
+            em.remove(bookingToDelete);
         }
     }
 }
